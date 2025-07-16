@@ -1,0 +1,32 @@
+[
+  {
+    "name": "com.rinha.core.model.PaymentRequest",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
+    "allPublicFields": true,
+    "unsafeAllocated": true
+  },
+  {
+    "name": "com.rinha.core.model.PaymentSummary",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
+    "allPublicFields": true,
+    "unsafeAllocated": true
+  },
+  {
+    "name": "com.rinha.core.model.ProcessorHealth",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
+    "allPublicFields": true,
+    "unsafeAllocated": true
+  }
+]
