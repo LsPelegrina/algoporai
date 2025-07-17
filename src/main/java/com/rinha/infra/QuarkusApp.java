@@ -17,4 +17,3 @@ public class QuarkusApp implements QuarkusApplication {
         Quarkus.run(QuarkusApp.class, args);
     }
 }
-

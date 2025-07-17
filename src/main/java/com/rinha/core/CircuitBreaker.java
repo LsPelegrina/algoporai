@@ -2,7 +2,6 @@ package com.rinha.core;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
-
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -31,4 +30,3 @@ public class CircuitBreaker {
         return (System.currentTimeMillis() - openedAt) < TIMEOUT_MS;
     }
 }
-

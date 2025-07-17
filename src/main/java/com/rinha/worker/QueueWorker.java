@@ -12,7 +12,6 @@ import jakarta.inject.Singleton;
 @Startup
 @Singleton
 public class QueueWorker {
-
     @Inject
     RedisRepository redis;
 
@@ -23,10 +22,20 @@ public class QueueWorker {
     void popAndProcess() {
         redis.dequeuePayment()
                 .onItem().ifNotNull().transformToUni(req -> {
-                    Log.info("Processando pagamento: " + req.getCorrelationId());
                     return processorService.process(req)
-                            .map(processor -> redis.incrementCounter(processor, req));
+                            .onItem().invoke(processor -> {
+                                // Processado com sucesso por "processor"
+                                redis.incrementCounter(processor, req).subscribe().with(x -> {
+                                });
+                            })
+                            .onFailure().recoverWithUni(ex -> {
+                                // Nenhum processor disponível. Re-enfileirar com backoff.
+                                redis.retryLater(req).subscribe().with(x -> {
+                                });
+                                return Uni.createFrom().nullItem();
+                            });
                 })
-                .subscribe().with(x -> {}, err -> Log.error("Erro no worker: " + err.getMessage()));
+                .subscribe().with(x -> {
+                }, err -> Log.error("Erro no worker: " + err.getMessage()));
     }
 }

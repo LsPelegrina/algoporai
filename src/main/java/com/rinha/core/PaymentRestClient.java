@@ -11,9 +11,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-@RegisterRestClient  // Mantém isso
+@RegisterRestClient
 public interface PaymentRestClient {
-
     @POST
     @Path("/payments")
     @Produces(MediaType.APPLICATION_JSON)
@@ -22,5 +21,5 @@ public interface PaymentRestClient {
     @GET
     @Path("/payments/service-health")
     @Produces(MediaType.APPLICATION_JSON)
-    Uni<ProcessorHealth> health();  // Assumindo que você tem um model ProcessorHealth
+    Uni<ProcessorHealth> health();
 }

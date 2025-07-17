@@ -5,6 +5,7 @@ COPY pom.xml .
 COPY mvnw mvnw.cmd ./
 COPY .mvn .mvn
 COPY src src
+RUN ./mvnw clean package
 RUN ./mvnw clean install -Dmaven.test.skip=true -Pnative
 
 # Etapa final: Imagem runtime minimalista

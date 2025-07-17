@@ -1,7 +1,10 @@
 package com.rinha.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rinha.core.RedisRepository;
+import com.rinha.core.model.PaymentRequest;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -23,4 +26,13 @@ public class SummaryResource {
         return redis.fetchSummary(from, to)
                 .map(summary -> Response.ok(summary).build());
     }
+
+    @PostConstruct
+    void testeJackson() throws Exception {
+        String exemplo = "{\"correlationId\":\"d0cdf046-e7bb-11ec-8fea-0242ac120002\",\"amount\":100.00}";
+        ObjectMapper om = new ObjectMapper();
+        PaymentRequest req = om.readValue(exemplo, PaymentRequest.class);
+        System.out.println("DEBUG JACKSON: " + req.getCorrelationId() + " / " + req.getAmount());
+    }
+
 }
