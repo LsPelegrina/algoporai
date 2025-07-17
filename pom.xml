@@ -48,6 +48,10 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jackson</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-rest-jackson-deployment</artifactId>
+        </dependency>
         <!-- REST Client -->
         <dependency>
             <groupId>io.quarkus</groupId>

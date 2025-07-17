@@ -10,6 +10,7 @@ import io.vertx.mutiny.redis.client.Request;
 import io.vertx.mutiny.redis.client.Redis;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import io.vertx.mutiny.redis.client.Response;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -38,16 +39,25 @@ public class RedisRepository {
         }
     }
 
-    private PaymentSummary parseSummary(io.vertx.mutiny.redis.client.Response response) {
-        long defaultCount = response.get("default:count") != null ? Long.parseLong(response.get("default:count").toString()) : 0;
-        BigDecimal defaultAmount = response.get("default:amount") != null ? new BigDecimal(response.get("default:amount").toString()) : BigDecimal.ZERO;
-        long fallbackCount = response.get("fallback:count") != null ? Long.parseLong(response.get("fallback:count").toString()) : 0;
-        BigDecimal fallbackAmount = response.get("fallback:amount") != null ? new BigDecimal(response.get("fallback:amount").toString()) : BigDecimal.ZERO;
+    private long parseLong(Object val) { try { return val != null ? Long.parseLong(val.toString()) : 0L; } catch (Exception e) { return 0L; } }
+    private BigDecimal parseBigDecimal(Object val) { try { return val != null ? new BigDecimal(val.toString()) : BigDecimal.ZERO; } catch (Exception e) { return BigDecimal.ZERO; } }
+
+
+    private PaymentSummary parseSummary(Response response) {
+        long defaultCount = parseLong(response.get("default:count"));
+        BigDecimal defaultAmount = parseBigDecimal(response.get("default:amount"));
+        long fallbackCount = parseLong(response.get("fallback:count"));
+        BigDecimal fallbackAmount = parseBigDecimal(response.get("fallback:amount"));
 
         return new PaymentSummary(
                 Map.of("totalRequests", defaultCount, "totalAmount", defaultAmount),
-                Map.of("totalRequests", fallbackCount, "totalAmount", fallbackAmount));
+                Map.of("totalRequests", fallbackCount, "totalAmount", fallbackAmount)
+        );
     }
+
+
+
+
 
     public Uni<Void> enqueuePayment(PaymentRequest req) {
         Request request = Request.cmd(Command.LPUSH).arg("payments-queue").arg(serialize(req));
@@ -65,10 +75,10 @@ public class RedisRepository {
     }
 
     public Uni<Void> incrementCounter(String processor, PaymentRequest req) {
-        return redis.send(Request.cmd(Command.MULTI))
-                .flatMap(v -> redis.send(Request.cmd(Command.HINCRBY).arg("summary").arg(processor + ":count").arg("1")))
-                .flatMap(v -> redis.send(Request.cmd(Command.HINCRBYFLOAT).arg("summary").arg(processor + ":amount").arg(req.getAmount().toString())))
-                .flatMap(v -> redis.send(Request.cmd(Command.EXEC)))
+        return redis.send(Request.cmd(Command.HINCRBY).arg("summary").arg(processor + ":count").arg("1"))
+                .flatMap(v ->
+                        redis.send(Request.cmd(Command.HINCRBYFLOAT).arg("summary").arg(processor + ":amount").arg(req.getAmount().toString()))
+                )
                 .map(v -> null);
     }
 

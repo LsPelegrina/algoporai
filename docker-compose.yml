@@ -17,7 +17,7 @@ services:
       resources:
         limits:
           cpus: "0.45"
-          memory: "45MB"
+          memory: "100MB"
 
   api02:
     build: .
@@ -36,7 +36,7 @@ services:
       resources:
         limits:
           cpus: "0.45"
-          memory: "45MB"
+          memory: "100MB"
 
   nginx:
     image: nginx:alpine
@@ -55,12 +55,12 @@ services:
       resources:
         limits:
           cpus: "0.10"
-          memory: "12MB"
+          memory: "75MB"
 
   redis:
     image: redis:7.2-alpine
     container_name: redis
-    command: redis-server --save "" --appendonly no --maxmemory 190mb --maxclients 10000
+    command: redis-server --maxclients 10000 --maxmemory-policy allkeys-lru --save "" --appendonly no
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 4s
@@ -72,7 +72,7 @@ services:
       resources:
         limits:
           cpus: "0.25"
-          memory: "235MB"
+          memory: "75MB"
 
 networks:
   backend:
