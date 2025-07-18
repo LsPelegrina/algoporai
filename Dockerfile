@@ -12,5 +12,6 @@ RUN ./mvnw clean install -Dmaven.test.skip=true -Pnative
 FROM quay.io/quarkus/quarkus-distroless-image:1.0
 WORKDIR /app
 COPY --from=build /workspace/app/target/*-runner /app/application
+COPY --from=build /workspace/app/src/main/resources/scripts/acquire_lock.lua /app/scripts/
 EXPOSE 8080
 CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]

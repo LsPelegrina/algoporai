@@ -16,7 +16,7 @@ public class PaymentRequest {
     private BigDecimal amount;
 
     @JsonProperty("requestedAt")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", shape = JsonFormat.Shape.STRING)
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssX", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime requestedAt;
 
     public PaymentRequest() {}

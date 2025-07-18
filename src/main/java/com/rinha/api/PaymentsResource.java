@@ -37,8 +37,7 @@ public class PaymentsResource {
             return Uni.createFrom().item(Response.status(400).build());
 
         // Gera timestamp no backend no formato correto, 3 casas decimais, UTC
-        req.setRequestedAt(java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC)
-                .truncatedTo(java.time.temporal.ChronoUnit.MILLIS));
+        req.setRequestedAt(OffsetDateTime.now(ZoneOffset.UTC).withNano(0));
 
         return redis.enqueuePayment(req)
                 .replaceWith(Response.accepted().build());
