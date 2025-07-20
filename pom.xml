@@ -76,6 +76,15 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-mutiny</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-reactive-pg-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-pg-client</artifactId>
+        </dependency>
+
         <!-- Testes -->
         <dependency>
             <groupId>io.quarkus</groupId>

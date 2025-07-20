@@ -28,5 +28,15 @@
     "allDeclaredFields": true,
     "allPublicFields": true,
     "unsafeAllocated": true
+  },
+  {
+    "name": "com.rinha.core.model.PaymentAudit",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
+    "allPublicFields": true,
+    "unsafeAllocated": true
   }
 ]

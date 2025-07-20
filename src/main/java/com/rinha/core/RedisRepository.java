@@ -104,10 +104,6 @@ public class RedisRepository {
                 });
     }
 
-    public Uni<Void> retryLater(PaymentRequest req) {
-        return enqueuePayment(req);
-    }
-
     /** Try to acquire idempotency lock for a payment using Lua script with TTL (180s). */
     public Uni<Boolean> tryLock(String correlationId) {
         String key = "payment:lock:" + correlationId;
