@@ -1,6 +1,8 @@
 package com.rinha.core;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-@RegisterRestClient(configKey = "fallback-client")
+@ApplicationScoped
+@RegisterRestClient(configKey = "fallback-api")
 public interface FallbackPaymentRestClient extends PaymentRestClient {}

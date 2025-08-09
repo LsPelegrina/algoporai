@@ -1,6 +1,8 @@
 package com.rinha.core;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-@RegisterRestClient(configKey = "default-client")
+@ApplicationScoped
+@RegisterRestClient(configKey = "default-api")
 public interface DefaultPaymentRestClient extends PaymentRestClient {}

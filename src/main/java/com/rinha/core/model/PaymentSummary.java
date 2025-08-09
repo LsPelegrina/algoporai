@@ -1,13 +1,14 @@
 package com.rinha.core.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.quarkus.runtime.annotations.RegisterForReflection;
-import java.util.Map;
+import java.math.BigDecimal;
 
-@RegisterForReflection
 public record PaymentSummary(
-        @JsonProperty("default")
-        Map<String, Object> defaultProcessor,
-        @JsonProperty("fallback")
-        Map<String, Object> fallbackProcessor
-) {}
+        @JsonProperty("default") SummaryData Default,
+        @JsonProperty("fallback") SummaryData Fallback
+) {
+        public record SummaryData(
+                long totalRequests,
+                BigDecimal totalAmount
+        ) {}
+}

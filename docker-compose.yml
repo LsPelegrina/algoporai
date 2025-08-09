@@ -1,34 +1,31 @@
 version: "3.9"
+
 services:
-  api01:
-    container_name: api01
+  api01: &api-base
     build: .
+    container_name: api01
+    hostname: api01
     environment:
       - QUARKUS_PROFILE=prod
+      - QUARKUS_OPTS=-Xms100m -Xmx100m -XX:+UseShenandoahGC
+    expose:
+      - "8080"
     depends_on:
       redis:
         condition: service_healthy
-    expose:
-      - "8080"
     networks:
       - backend
       - payment-processor
-
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "100MB"
 
   api02:
-    build: .
+    <<: *api-base
     container_name: api02
-    environment:
-      - QUARKUS_PROFILE=prod
-    expose:
-      - "8080"
-    depends_on:
-      redis:
-        condition: service_healthy
-    networks:
-      - backend
-      - payment-processor
-
+    hostname: api02
 
   nginx:
     image: nginx:alpine
@@ -42,13 +39,16 @@ services:
       - api02
     networks:
       - backend
-    restart: unless-stopped
-
+    deploy:
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: "60MB"
 
   redis:
     image: redis:7.2-alpine
     container_name: redis
-    command: redis-server --maxclients 20000 --maxmemory-policy allkeys-lru --save "" --appendonly no
+    command: redis-server --maxclients 20000 --maxmemory 60mb --maxmemory-policy allkeys-lru --save "" --appendonly no --io-threads 4 --io-threads-do-reads yes
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 4s
@@ -56,23 +56,11 @@ services:
       retries: 3
     networks:
       - backend
-
-
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_PASSWORD: rinha
-      POSTGRES_DB: rinha
-      POSTGRES_USER: rinha
-    volumes:
-      - ./src/main/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - "5432:5432"
-    command: postgres -c max_connections=300 -c shared_buffers=28MB -c work_mem=512kB -c maintenance_work_mem=2MB -c fsync=off -c full_page_writes=off -c synchronous_commit=off
-    networks:
-      - backend
-      - payment-processor
-
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: "90MB"
 
 networks:
   backend:

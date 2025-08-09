@@ -1,9 +1,8 @@
 package com.rinha.core.model;
 
-import io.quarkus.runtime.annotations.RegisterForReflection;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@RegisterForReflection
 public record ProcessorHealth(
-        boolean failing,
-        int minResponseTime
+        @JsonProperty("failing") boolean failing,
+        @JsonProperty("minResponseTime") int minResponseTime
 ) {}
